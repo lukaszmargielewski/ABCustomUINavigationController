@@ -10,8 +10,11 @@
 
 typedef enum {FSNavSortMethodRandom, FSNavSortMethodHorizontal} FSNavSortMethod;
 
-@interface FlipSquaresNavigationController : UINavigationController
+
+@interface FlipSquaresAnimator : NSObject
 
 @property (nonatomic, assign) FSNavSortMethod sortMethod;
+
+-(void)animateFromView:(UIView *)fromView toView:(UIView *)toView  withCompletion: (void(^)(void))completion;
 
 @end

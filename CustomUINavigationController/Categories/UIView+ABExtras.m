@@ -8,6 +8,8 @@
 
 #import "UIView+ABExtras.h"
 #import "UINavigationController+ABExtras.h"
+#import "UIImageView+ABExtras.h"
+#import "LMImageCache.h"
 
 @implementation UIView (ABExtras)
 
@@ -65,6 +67,8 @@
     
     CGContextSetInterpolationQuality(UIGraphicsGetCurrentContext(), kCGInterpolationHigh);
     UIImage * img = UIGraphicsGetImageFromCurrentImageContext();
+
+    
     UIGraphicsEndImageContext();
     
     UIImageView *currentView = [[UIImageView alloc] initWithImage: img];
@@ -73,7 +77,43 @@
     float yPosition = [navController calculateYPosition];
     [currentView setFrame:CGRectMake(0, yPosition, currentView.frame.size.width, currentView.frame.size.height)];
     
+    
     return currentView;
 }
-
+- (UIImageView *)snapshotImageView
+{
+    
+    CGFloat scale = [[UIScreen mainScreen] scale];
+    
+    UIWindow *window = [[UIApplication sharedApplication] keyWindow];
+    //[window.layer setContentsScale:scale];
+    
+    UIGraphicsBeginImageContextWithOptions(window.bounds.size, YES, scale);
+    [window.layer renderInContext:UIGraphicsGetCurrentContext()];
+    
+    UIImage * img = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+  
+    NSString *url = [NSString stringWithFormat:@"window.jpg"];
+    [[LMImageCache cache] saveImage:img forUrl:url];
+    
+    CGRect f = [self.superview convertRect:self.frame toView:window];
+    f.origin.x *= scale;
+    f.origin.y *= scale;
+    f.size.width *= scale;
+    f.size.height *= scale;
+    
+    CGImageRef imageRef = CGImageCreateWithImageInRect(img.CGImage, f);
+    UIImage * imgFrag = [UIImage imageWithCGImage:imageRef];
+    
+    url = [NSString stringWithFormat:@"window_fargment.jpg"];
+    [[LMImageCache cache] saveImage:imgFrag forUrl:url];
+    
+     UIImageView *currentView = [[UIImageView alloc] initWithImage:imgFrag];
+    //currentView.layer.contentsScale = scale;
+    currentView.contentMode = UIViewContentModeScaleToFill;
+    currentView.opaque = YES;
+    currentView.frame = self.bounds;
+    return currentView;
+}
 @end

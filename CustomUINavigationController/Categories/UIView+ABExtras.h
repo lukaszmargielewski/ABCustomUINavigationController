@@ -19,6 +19,11 @@
  Methot that capture a image from that view
  */
 - (UIImageView *) imageInNavController: (UINavigationController *) navController;
+
+/**
+ Methot that capture a image from that view (simple, without UINavigationController positioning, etc..)
+ */
+- (UIImageView *)snapshotImageView;
 /**
  Method that adds a view with color in that view
  */

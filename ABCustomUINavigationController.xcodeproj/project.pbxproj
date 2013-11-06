@@ -12,7 +12,7 @@
 		3CCCEAE317B4E0A800750A12 /* UINavigationController+ABExtras.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CCCEAD817B4E0A800750A12 /* UINavigationController+ABExtras.m */; };
 		3CCCEAE417B4E0A800750A12 /* UIView+ABExtras.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CCCEADA17B4E0A800750A12 /* UIView+ABExtras.m */; };
 		3CCCEAE517B4E0A800750A12 /* CubeNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CCCEADD17B4E0A800750A12 /* CubeNavigationController.m */; };
-		3CCCEAE617B4E0A800750A12 /* FlipSquaresNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CCCEAE017B4E0A800750A12 /* FlipSquaresNavigationController.m */; };
+		3CCCEAE617B4E0A800750A12 /* FlipSquaresAnimator.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CCCEAE017B4E0A800750A12 /* FlipSquaresAnimator.m */; };
 		3CCCEB0817B4E0F800750A12 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 3CCCEAEB17B4E0F800750A12 /* AppDelegate.m */; };
 		3CCCEB0917B4E0F800750A12 /* bg_1.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3CCCEAED17B4E0F800750A12 /* bg_1.jpg */; };
 		3CCCEB0A17B4E0F800750A12 /* bg_1_iPad.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 3CCCEAEE17B4E0F800750A12 /* bg_1_iPad.jpg */; };
@@ -52,8 +52,8 @@
 		3CCCEADA17B4E0A800750A12 /* UIView+ABExtras.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+ABExtras.m"; sourceTree = "<group>"; };
 		3CCCEADC17B4E0A800750A12 /* CubeNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CubeNavigationController.h; sourceTree = "<group>"; };
 		3CCCEADD17B4E0A800750A12 /* CubeNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CubeNavigationController.m; sourceTree = "<group>"; };
-		3CCCEADF17B4E0A800750A12 /* FlipSquaresNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlipSquaresNavigationController.h; sourceTree = "<group>"; };
-		3CCCEAE017B4E0A800750A12 /* FlipSquaresNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlipSquaresNavigationController.m; sourceTree = "<group>"; };
+		3CCCEADF17B4E0A800750A12 /* FlipSquaresAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlipSquaresAnimator.h; sourceTree = "<group>"; };
+		3CCCEAE017B4E0A800750A12 /* FlipSquaresAnimator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FlipSquaresAnimator.m; sourceTree = "<group>"; };
 		3CCCEAE917B4E0F800750A12 /* ABCustomUINavigationController-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ABCustomUINavigationController-Prefix.pch"; sourceTree = "<group>"; };
 		3CCCEAEA17B4E0F800750A12 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		3CCCEAEB17B4E0F800750A12 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -140,8 +140,8 @@
 		3CCCEADE17B4E0A800750A12 /* SquaresFlipNavigation */ = {
 			isa = PBXGroup;
 			children = (
-				3CCCEADF17B4E0A800750A12 /* FlipSquaresNavigationController.h */,
-				3CCCEAE017B4E0A800750A12 /* FlipSquaresNavigationController.m */,
+				3CCCEADF17B4E0A800750A12 /* FlipSquaresAnimator.h */,
+				3CCCEAE017B4E0A800750A12 /* FlipSquaresAnimator.m */,
 			);
 			path = SquaresFlipNavigation;
 			sourceTree = "<group>";
@@ -316,7 +316,7 @@
 				3CCCEAE317B4E0A800750A12 /* UINavigationController+ABExtras.m in Sources */,
 				3CCCEAE417B4E0A800750A12 /* UIView+ABExtras.m in Sources */,
 				3CCCEAE517B4E0A800750A12 /* CubeNavigationController.m in Sources */,
-				3CCCEAE617B4E0A800750A12 /* FlipSquaresNavigationController.m in Sources */,
+				3CCCEAE617B4E0A800750A12 /* FlipSquaresAnimator.m in Sources */,
 				3CCCEB0817B4E0F800750A12 /* AppDelegate.m in Sources */,
 				3CCCEB1317B4E0F800750A12 /* main.m in Sources */,
 				3CCCEB1417B4E0F800750A12 /* SecondViewController.m in Sources */,

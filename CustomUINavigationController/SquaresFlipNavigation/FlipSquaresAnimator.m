@@ -6,7 +6,8 @@
 //  Copyright (c) 2013 Andrés Brun. All rights reserved.
 //
 
-#import "FlipSquaresNavigationController.h"
+#import "FlipSquaresAnimator.h"
+
 #import <QuartzCore/QuartzCore.h>
 
 #import "NSObject+ABExtras.h"
@@ -17,17 +18,17 @@
 #define ARC4RANDOM_MAX 0x100000000
 
 //Configure params
-#define SQUARE_ROWS 5
-#define SQUARE_COLUMNS 8
-#define TIME_ANIMATION 1.0
+#define SQUARE_ROWS 8
+#define SQUARE_COLUMNS 3
+#define TIME_ANIMATION 10.0
 
-@interface FlipSquaresNavigationController (){
+@interface FlipSquaresAnimator (){
     NSMutableArray *fromViewImagesArray;
     NSMutableArray *toViewImagesArray;
     BOOL pushingVC;
 }
 
-- (void) makeSquaresFlipAnimationFrom: (UIImageView *) fromImage to: (UIImageView *) toImage option: (UIViewAnimationOptions) options withCompletion: (void(^)(void))completion;
+- (void) makeSquaresFlipAnimationFrom:(UIImageView *) fromImage view:(UIView *)fromView to: (UIImageView *) toImage view:(UIView *)toView option: (UIViewAnimationOptions) options withCompletion: (void(^)(void))completion;
 
 //Array methods
 - (NSMutableArray *) shuffleArray: (NSMutableArray *)array;
@@ -40,11 +41,10 @@
 
 @end
 
-@implementation FlipSquaresNavigationController
+@implementation FlipSquaresAnimator
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
+- (id)init{
+    self = [super init];
     if (self) {
         // Custom initialization
         self.sortMethod = FSNavSortMethodHorizontal;
@@ -52,159 +52,31 @@
     return self;
 }
 
-- (void)viewDidLoad
-{
-    [super viewDidLoad];
-}
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-}
 
 #pragma mark - Overwrite UINavigationController methods
 
--(void)pushViewController:(UIViewController *)viewController animated:(BOOL)animated
-{
-    pushingVC=YES;
+-(void)animateFromView:(UIView *)fromView toView:(UIView *)toView  withCompletion: (void(^)(void))completion{
     
-    if (animated) {
-        
-        UIViewController *currentVC = [self visibleViewController];
+    pushingVC=YES;
 
-        UIImageView *fromImageView = [currentVC.view imageInNavController:self];
+    
+        UIImageView *fromImageView = [fromView snapshotImageView];
+        UIImageView *toImageView = [toView snapshotImageView];
         
-        //Issue with autosizing, we nned to set the frame before take the image
-        [viewController.view setFrame:currentVC.view.frame];    //Resize new view manually
-        UIImageView *toImageView = [viewController.view imageInNavController:self];
-        
-        [currentVC.view setAlpha:0.0];
-        
-        [self makeSquaresFlipAnimationFrom:fromImageView to:toImageView option:UIViewAnimationOptionTransitionFlipFromLeft withCompletion:^{
+    [self makeSquaresFlipAnimationFrom:fromImageView view:fromView to:toImageView view:toView option:UIViewAnimationOptionTransitionFlipFromLeft withCompletion:^{
+
+            completion();
             
-            //Do the push
-            [super pushViewController:viewController animated:NO];
-
-            [currentVC.view setAlpha:1.0];
             
         }];
-    }else{
-        [super pushViewController:viewController animated:NO];
-    }
-}
 
--(UIViewController *)popViewControllerAnimated:(BOOL)animated
-{
-    pushingVC=NO;
-    
-    //Find the previous vc in stack
-    if([self.viewControllers count]>1){
-        if (animated) {
-            UIViewController *currentVC = [self visibleViewController];
-            
-            UIImageView *currentView = [currentVC.view imageInNavController:self];
-            
-            int index = [self.viewControllers indexOfObject:currentVC];
-            
-            if (index>0) {
-                
-                //Issue with autosizing, we nned to set the frame before take the image
-                UIViewController *toViewController = [self.viewControllers objectAtIndex:index-1];
-                [toViewController.view setFrame:currentVC.view.frame];    //Resize new view manually
-                UIImageView *newView = [toViewController.view imageInNavController:self];
-                
-                [currentVC.view setAlpha:0.0];
-                
-                __block UIViewController *returnedVC;
-                [self makeSquaresFlipAnimationFrom:currentView to:newView option:UIViewAnimationOptionTransitionFlipFromRight withCompletion:^{
-                    
-                    returnedVC = [super popViewControllerAnimated:NO];
-                    
-                }];
-                
-                return returnedVC;
-            }else{
-                return [super popViewControllerAnimated:NO];
-            }
-            
-        }else{
-            return [super popViewControllerAnimated:NO];
-        }
-    }else{
-        return [super popViewControllerAnimated:animated];
-    }
-
-}
-
-- (NSArray *)popToRootViewControllerAnimated:(BOOL)animated
-{
-    pushingVC=NO;
-    
-    //Find the root view controller
-    if([self.viewControllers count]>1){
-        if (animated) {
-            UIViewController *currentVC = [self visibleViewController];
-            UIViewController *rootVC = [self.viewControllers objectAtIndex:0];
-            
-            //Issue with autosizing, we nned to set the frame before take the image
-            [rootVC.view setFrame:currentVC.view.frame];    //Resize new view manually
-            
-            UIImageView *currentView = [currentVC.view imageInNavController:self];
-            UIImageView *newView = [rootVC.view imageInNavController:self];
-            
-            [currentVC.view setAlpha:0.0];
-            
-            __block NSArray *stackVCs;
-            [self makeSquaresFlipAnimationFrom:currentView to:newView option:UIViewAnimationOptionTransitionFlipFromRight withCompletion:^{
-                stackVCs = [super popToRootViewControllerAnimated:NO];
-            }];
-            
-            return stackVCs;
-            
-        }else{
-            return [super popToRootViewControllerAnimated:NO];
-        }
-    }else{
-        return [super popToRootViewControllerAnimated:animated];
-    }
-}
-
-- (NSArray *)popToViewController:(UIViewController *)viewController animated:(BOOL)animated
-{
-    pushingVC=NO;
-    
-    //Find the root view controller
-    if([self.viewControllers count]>1){
-        if (animated) {
-            UIViewController *currentVC = [self visibleViewController];
-            
-            //Issue with autosizing, we nned to set the frame before take the image
-            [viewController.view setFrame:currentVC.view.frame];    //Resize new view manually
-            
-            UIImageView *currentView = [currentVC.view imageInNavController:self];
-            UIImageView *newView = [viewController.view imageInNavController:self];
-            
-            [currentVC.view setAlpha:0.0];
-            
-            __block NSArray *stackVCs;
-            [self makeSquaresFlipAnimationFrom:currentView to:newView option:UIViewAnimationOptionTransitionFlipFromRight withCompletion:^{
-                stackVCs = [super popToViewController:viewController animated:NO];
-            }];
-            
-            return stackVCs;
-            
-        }else{
-            return [super popToViewController:viewController animated:NO];
-        }
-    }else{
-        return [super popToViewController:viewController animated:animated];
-    }
 }
 
 
 #pragma mark - animate methods
-- (void) makeSquaresFlipAnimationFrom: (UIImageView *) fromImage to: (UIImageView *) toImage option: (UIViewAnimationOptions) options withCompletion: (void(^)(void))completion
-{
+                                                                  
+- (void) makeSquaresFlipAnimationFrom:(UIImageView *) fromImage view:(UIView *)fromView to: (UIImageView *) toImage view:(UIView *)toView option: (UIViewAnimationOptions) options withCompletion: (void(^)(void))completion{
+    
     fromViewImagesArray = [NSMutableArray array];
     toViewImagesArray = [NSMutableArray array];
     
@@ -215,10 +87,12 @@
     //Create the cropped images
     
     for (int col=0; col<SQUARE_COLUMNS; col++) {
+        
         for (int row=0; row<SQUARE_ROWS; row++) {
             CGRect currentRect = CGRectMake(row*rowsWidth,col*columnsHeight,rowsWidth,columnsHeight);
-            UIView *fromView =[[fromImage createCrop:currentRect] createView];
-            UIView *toView =[[toImage createCrop:currentRect] createView];
+            
+            UIView *fromView = [[fromImage createCrop:currentRect] createView];
+            UIView *toView = [[toImage createCrop:currentRect] createView];
 
             [fromViewImagesArray addObject:fromView];
             [toViewImagesArray addObject:toView];
@@ -227,7 +101,7 @@
     
     //Add the images
     for (UIView *currentView in fromViewImagesArray) {
-        [self.view addSubview:currentView];
+        [fromView addSubview:currentView];
     }
         
     //Create a array with all the number and unsort after
@@ -248,7 +122,7 @@
         //we "order" the delays for sort the animation in time
         float ratio = posIndex/([orderArray count]*1.0);
         float delay = [self getRandomFloat01]*TIME_ANIMATION*0.4*ratio + TIME_ANIMATION*0.3*ratio;//Random + Fix -> MAX 70% of TIME_ANIMATION
-        //NSLog(@"PosIndex: %d Element: %d delay: %f", posIndex, [currentPos intValue], delay);
+        ////DLog(@"PosIndex: %d Element: %d delay: %f", posIndex, [currentPos intValue], delay);
         maxDelay = MAX(delay, maxDelay);
         [self performBlock:^{
             
